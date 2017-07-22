@@ -6,7 +6,7 @@ PWNABLE KR - TODDLER - Passcode - 10pt
 쉽게 풀릴 줄 알았던 문제인데, 의외로 정말 오랫동안 애를 먹었던 문제.
 이유는 나중에 설명을 하겠지만, 작은 힌트에 대해서 너무 쉽게 생각했던 내 안이함이 큰 원인이었다.
 
-#0.우선은 소스코드 살펴보기
+# 0.우선은 소스코드 살펴보기
   passcode.c 파일을 살펴보면 welcome() 에서 username 을 받고, login()에서 모든 비교 작업을 하는 것을 알 수 있음. 매우 간단한 코드.
 
   그럼 이제 실제로 어딜 보면 좋을지를 알기 위해서 gdb 로 asm 코드를 보니
@@ -19,7 +19,7 @@ PWNABLE KR - TODDLER - Passcode - 10pt
     - 그 비교 대상이라고 하면 결국 passcode1과 passcode2 밖에 없기 때문임
   * 아마도 추정하길 ~~추정은 금물. 난 다 틀려~~ username으로 받아들인 변수가 passcode1과 passcode2에 착착 들어가겠지? 라는 착각으로 조금 더 살펴보기 시작함
 
-#1.처음에 쉽게 생각했던 이유
+# 1.처음에 쉽게 생각했던 이유
   동작내용을 보면 "name" 변수에 string 을 받아들이는데, 아마도 여기서 뭔가 터지는 부분이 있겠거니 하는 마음으로 매우 긴 string을 포함시켰음
   이 때, 어디서 에러를 발생시키는지 위치를 정확하게 파악하기 위해서 사용한 string은 아래와 같음
 
@@ -30,14 +30,14 @@ PWNABLE KR - TODDLER - Passcode - 10pt
   * 예상과 비슷하게 ```$ebp-0x10```과 ```$ebp-0xc```에는 비교 대상이 포함되었고, ```$ebp-0x10```에 ```name``` 변수의 맨 마지막 4 byte가 들어가는 것을 확인함
   * 0x67316631은 ```1f1g``` 이므로 입력 맨 마지막 변수가 비교대상으로 포함되는 것을 알 수 있었음
 
-#2. 시련은 여기부터
+# 2. 시련은 여기부터
    숱한 삽질을 해도, 어떻게든 ```passcode1```에는 값이 들어가고 또 비교문구도 통과도 하지만
    * 더 긴 ~~그리고 더 긴, 긴...~~~ username 을 넣어봐도
    * username은 짧게 하고 passcode1에 긴 값을 넣어봐도
 
    아무래도 더 진행은 어려웠는데...(사실 걍 포기한 상태였고, 그 이후에 pwnable kr 을 모두 풀어보자는 그룹에 가입)
 
-#3. Assist
+# 3. Assist
    GOT와 PLT를 봐보라는 조언으로 다시 시작.
 
    [GOT와 PLT #1](https://bpsecblog.wordpress.com/2016/03/07/about_got_plt_1/)
@@ -45,7 +45,7 @@ PWNABLE KR - TODDLER - Passcode - 10pt
 
    * Special thanks for @hackpupu & @min
 
-#4. Reload
+# 4. Reload
    (앞서 말했던 것처럼)결론적으로 내가 가장 등한시 했던 부분이 바로 scanf 함수에 대한 이해였음. scanf를 너무 쉽게 사용했음에도 그것에 대해서 잘 고민해보는 시간이 없었던터라..
 
    [scanf 설명 ~~너무도 당연한~~~](http://itguru.tistory.com/36)
@@ -71,7 +71,7 @@ _강제로 ```eip```를 0x80485e3으로 변경한 후 스택에 올라온 값을
 
 ![fig4](./_fig/4.png)
 
-#5. Exploit
+# 5. Exploit
  payload 구성은 아래와 같음
  + 96byte의 의미없는 byte stream -> "A"
  + scanf를 통해 입력될 passcode1의 위치(주소값) -> ```"0x8048a004"``` (fflush 원래 코드가 위치하는 jmp 이후의 주소)
