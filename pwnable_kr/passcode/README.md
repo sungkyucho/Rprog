@@ -41,23 +41,24 @@ PWNABLE KR - TODDLER - Passcode - 10pt
    GOT와 PLT를 봐보라는 조언으로 다시 시작.
 
    [GOT와 PLT #1](https://bpsecblog.wordpress.com/2016/03/07/about_got_plt_1/)
+
    [GOT와 PLT #2](http://expointer.tistory.com/13)
 
-   * Special thanks for @hackpupu & @min
+   * Special thanks to @hackpupu & @min
 
 # 4. Reload
    (앞서 말했던 것처럼)결론적으로 내가 가장 등한시 했던 부분이 바로 scanf 함수에 대한 이해였음. scanf를 너무 쉽게 사용했음에도 그것에 대해서 잘 고민해보는 시간이 없었던터라..
 
    [scanf 설명 ~~너무도 당연한~~~](http://itguru.tistory.com/36)
 
-   곰곰히 잘 생각해보면
-     1) scanf("%d", &var)는 var의 주소가 0x0add 라면 0x0add에 입력받은 10진정수를 저장하라는 것이고 1000을 입력하면
-      * 0x0add = 1000 이 된다. ~~~당연하지~~~
-     2) 근데 현재 passcode 상에서의 code 는 ```&``` 가 없는 상태인데 여기에 1000을 입력하면
-      * 1000이라는 주소를 사용자가 지정하게 되어버리는 꼴
-      * 따라서, scanf 함수 내에서 당연히 죽어버리게 됨
-     3) 결론적으로 **코드에서 작성된 scanf의 bug를 이용하여 exploit 하는 방향이었고, 이 때 활용할 수 있는 카드가 GOT&PLT** 였던 것임
-     4) 그럼 대상이 어떻게 되어야 할 것이냐를 보면, 위 ```gdb) disas login``` 상에서 쭉 보면 알겠지만, 간단하게 fflush가 뛰어야 할 정상 주소가 아닌, ```cmp``` 명령어 이후의 ```0x80485e3```으로 뛰면 된다. 바로 뒤에 system 함수가 호출되는 ```0x80485ea```로 뛰지 않는 이유는 간단하다. ``` "/bin/cat flag" ``` 라는 문자열이 셋업된 이후에 뛰어야 하기 때문임
+곰곰히 잘 생각해보면
+1) scanf("%d", &var)는 var의 주소가 0x0add 라면 0x0add에 입력받은 10진정수를 저장하라는 것이고 1000을 입력하면 0x0add = 1000 이 된다. ~~~당연하지~~~
+2) 근데 현재 passcode 상에서의 code 는 ```&``` 가 없는 상태인데 여기에 1000을 입력하면
+- 1000이라는 주소를 사용자가 지정하게 되어버리는 꼴
+- 따라서, scanf 함수 내에서 당연히 죽어버리게 됨
+
+3) 결론적으로 **코드에서 작성된 scanf의 bug를 이용하여 exploit 하는 방향이었고, 이 때 활용할 수 있는 카드가 GOT&PLT** 였던 것임
+4) 그럼 대상이 어떻게 되어야 할 것이냐를 보면, 위 ```gdb) disas login``` 상에서 쭉 보면 알겠지만, 간단하게 fflush가 뛰어야 할 정상 주소가 아닌, ```cmp``` 명령어 이후의 ```0x80485e3```으로 뛰면 된다. 바로 뒤에 system 함수가 호출되는 ```0x80485ea```로 뛰지 않는 이유는 간단하다. ``` "/bin/cat flag" ``` 라는 문자열이 셋업된 이후에 뛰어야 하기 때문임
 
 ![fig3](./_fig/3.png)
 
