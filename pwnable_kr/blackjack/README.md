@@ -49,7 +49,40 @@ PWNABLE KR - TODDLER - blackjack - 1pt
   } // End Function
   ```
 
-  실제로 ```bet``` 변수는 전역변수로 선언이 되어 있으며
+  * 실제로 ```bet``` 변수는 전역변수로 선언이 되어 있으며, 배팅 금액을 입력받은 후 -> 가진 금액보다 작으면 다시 입력받고 -> 그리고 끝남.
+
+  * 재입력값을 다시는 체크하는 루틴이 어디에도 없음
+
+  * 마지막으로, 그 재입력값 ```bet```이 승리했을 때는 기존의 자금 ```cash```와 더해져서 ```cash = cash + bet```이지만, 지면 ```cash = cash - bet```이기 때문에. 이겨야 한다. **(이점을 이용하면, bet을 음수로 하면 져도 된다)**
+
+  ```c
+  if (bet > cash) //If player tries to bet more money than player has search hit BOTTOM, continuing at TOP
+
+      if((choice1 == 'Y') || (choice1 == 'y')) // If yes, continue. Prints menu.
+      h
+  You Win!\n");
+               won = won+1;
+               cash = cash+bet;
+               printf("\nYou have %d Wins and %d Losses. Awesome!\n", won, loss);
+               dealer_total=0;
+               askover();
+           }
+
+           if(p>21) //If player total is over 21, loss
+           {
+               printf("\nWoah Buddy, You Went WAY over.\n");
+               loss = loss+1;
+               cash = cash - bet;
+               printf("\nYou have %d Wins and %d Losses. Awesome!\n", won, loss);
+               dealer_total=0;
+               askover();
+           }
+
+  ```
 
 # 2. Exploit
-  * 걍
+  * 걍 두 번째 입력받을 때 굉장히 큰 수를 집어넣으면 끝
+  * 이러고 이기거나
+  ![fig3](./_fig/3.png)
+  * 이러고 지거나
+  ![fig4](./_fig/4.png)
