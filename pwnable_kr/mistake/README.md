@@ -35,7 +35,7 @@ Special thanks to @lili
   * 원래대로라면, 정확한 분석 이후에 pwn을 해야 하지만.. 이번에는 좀 그러질 못했음
   * 위에서 **엔터를 쳐야 다음 문구가 나온다** 는 것에 비추어보면, ```password``` 파일을 제대로 읽어오질 못한다는 점을 알 수 있음
 
-```{.cpp}
+```c
   int fd;
 	if(fd=open("/home/mistake/password",O_RDONLY,0400) < 0){
 		printf("can't open password %d\n", fd);
@@ -45,14 +45,13 @@ Special thanks to @lili
 
   * 결국 위의 코드가 잘못되었다는 것인데, file descriptor를 기반으로 에러를 확인하는 코드는 보통 아래와 같이 짠다
 
-```{.cpp}
+```c
   fd = open("/home/sungkyu.txt", O_RDONLY);
 
   if (fd == -1)
         printf ("Error.... \n");
   else
         printf ("Success...!!! FD is : %d \n" , fd);
-}
 ```
   * 즉, ```fd```에 값을 불러들인 이후에 그 값을 에러로 체크해야 하는데, 연산자 우선순위가 잘못되어 있음
   * [MSDN 연산자 우선순위](https://msdn.microsoft.com/ko-kr/library/2bxt6kc4.aspx)
@@ -61,7 +60,7 @@ Special thanks to @lili
   * 결론적으로 ```password```파일이 아닌 입력값을 참조하게 된다는 것이었음
   * 아래는 혹시나 싶어 테스트로 만들어본 코드인데, 결국 아래처럼 동작한다는 것이 결론임
 
-```{.cpp}
+```c
 #include<stdio.h>
 
 int main(void)

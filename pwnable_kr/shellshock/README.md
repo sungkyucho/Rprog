@@ -16,7 +16,7 @@ IT 업무(특히 보안)를 한 사람이라면 절대 잊을 수 없었던 취�
 # 1.Check it up
   위 [링크](https://en.wikipedia.org/wiki/Shellshock_(software_bug))에서 test vector는 아주 잘 나와있음
 
-  ```{.c}
+  ```shell
 
 env x='() { :;}; echo vulnerable' bash -c "echo this is a test"
 

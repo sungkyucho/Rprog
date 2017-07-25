@@ -23,7 +23,7 @@ PWNABLE KR - TODDLER - Passcode - 10pt
   동작내용을 보면 "name" 변수에 string 을 받아들이는데, 아마도 여기서 뭔가 터지는 부분이 있겠거니 하는 마음으로 매우 긴 string을 포함시켰음
   이 때, 어디서 에러를 발생시키는지 위치를 정확하게 파악하기 위해서 사용한 string은 아래와 같음
 
-  0123456789abcdefghijklmnopqrstuvwxyz0a0b0c0d0f0g0h0i0j0k0l0m0n0o0p0q0r0s0t0u0v0w0x0y0z1a1b1c1d1e1f1g1h1i1j1k1l1m1n1o1p1q1r1s1t1u1v1w1x1y1z2a2b2c2d2e2f2g2h2i2j2k2l2m2n2o2p2q2r2s2t2u2v2w2x2y2z
+  ```0123456789abcdefghijklmnopqrstuvwxyz0a0b0c0d0f0g0h0i0j0k0l0m0n0o0p0q0r0s0t0u0v0w0x0y0z1a1b1c1d1e1f1g1h1i1j1k1l1m1n1o1p1q1r1s1t1u1v1w1x1y1z2a2b2c2d2e2f2g2h2i2j2k2l2m2n2o2p2q2r2s2t2u2v2w2x2y2z```
 
   ![fig2](./_fig/2.png)
 
