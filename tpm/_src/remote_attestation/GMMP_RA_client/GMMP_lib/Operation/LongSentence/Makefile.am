@@ -1,0 +1,2 @@
+noinst_LTLIBRARIES=libGMMP_LSentence.la
+libGMMP_LSentence_la_SOURCES = GMMP_LSentence.c 

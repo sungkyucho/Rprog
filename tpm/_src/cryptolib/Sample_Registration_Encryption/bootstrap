@@ -1,0 +1,8 @@
+#!/bin/sh
+
+touch config.h.in
+glibtoolize
+aclocal
+automake --add-missing
+autoconf
+

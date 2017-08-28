@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1 style="margin: 30px">{% if item %}Edit item{% else %}Create item{% endif%}</h1>
+	<div style="margin: 30px">
+	<form method="POST" action="."> 
+	{% csrf_token %}
+	{{ form }}
+	<input type="submit" class="btn btn-primary" value="Save">
+	</form>
+	</div>
+{% endblock %}

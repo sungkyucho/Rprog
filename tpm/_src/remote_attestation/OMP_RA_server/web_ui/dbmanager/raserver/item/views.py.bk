@@ -1,0 +1,120 @@
+from django.shortcuts import render, redirect
+from django.core.urlresolvers import reverse_lazy
+from django.http import Http404
+from item.models import Item, History, Answer
+from item.forms import RecipeForm
+from django.views.generic import DeleteView 
+import socket
+
+
+def read_conf():
+	host = None
+	port = None
+	devinfo = []
+	with open('pcrcontroller/device.conf') as f:
+		for line in f:
+			devinfo.append([n for n in line.strip().split(':')])
+	for pair in devinfo:
+		try:
+			if pair[0] == 'host':
+				host = pair[1]
+			elif pair[0] == 'port':
+				port = pair[1]	
+		except :
+			print('configure is not valid')
+
+	return host, port
+
+def ra_result(request):
+    """Pull the current list of all ra result and return them.
+    """
+    raresult = Item.objects.all()[:100]
+    context = {'raresult': raresult}
+    return render(request, 'radashboard.html', context)
+#    return render(request, 'raresult.html', context)
+
+def ra_history(request):
+    """Pull the current list of all ra result and return them.
+    """
+    raresult = History.objects.all().order_by('-id')[:500]
+    context = {'raresult': raresult}
+    return render(request, 'rahistory.html', context)
+
+
+def ra_list(request, ra_id):
+	"""Render a specific ra_list, selected by ID, in a standalone page
+	"""
+	try:
+		ra_list = Item.objects.get(gw_id=ra_id)
+	except Item.DoesNotExist:
+		ra_list = None
+
+	try:
+		ra_history= History.objects.filter(gw_id=ra_id).order_by('-id')[:500]
+	except History.DoesNotExist:
+		ra_history = None 
+
+	try:
+		ra_answer = Answer.objects.get(id=1)
+	except Answer.DoesNotExist:
+		ra_answer = None 
+
+	context = {'ra_list': ra_list, 'ra_history':ra_history, 'ra_answer': ra_answer}
+	return render(request, 'ralist.html', context)
+
+
+def resetpcr(request, uuid):
+	try:
+	    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	except socket.error:
+	    print('Failed to create socket')
+	     
+	print('# Getting remote IP address') 
+	host, port = read_conf()
+
+	if host and port :
+		try:
+			s.connect((host, int(port)))
+		except socket.error, exc:
+			print "Caught exception socket.error : %s" % exc
+			return redirect(ra_list, ra_id=uuid)
+
+		print('# Sending data to server')
+		try:
+			s.sendall("RST16")
+		except socket.error, exc:
+			print "Caught exception socket.error : %s" % exc
+			return redirect(ra_list, ra_id=uuid)
+
+		reply = s.recv(4096)
+		print reply
+	else:
+		print('invalid configure data')
+
+	s.close()
+	return redirect(ra_list, ra_id=uuid)
+
+def addra(request):
+    """Create a form that can be used to add a new ra.
+    Save data submitted through the form to the database as a new ra.
+    """
+
+    if request.method == 'POST':
+        form = RecipeForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            r = Item()
+            r.name = data['name']
+            r.servings = data['servings']
+            r.description = data['description']
+            r.ingredients = data['ingredients']
+            r.instructions = data['instructions']
+            r.save()
+            return redirect(ra_result)
+    else:
+        form = RecipeForm()
+    return render(request, 'addra.html', {'form': form})
+
+class DeleteItem(DeleteView):
+    model = Item
+    success_url = reverse_lazy('raresult')

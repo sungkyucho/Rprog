@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block maincontent %}
+<h4> Register device to ThingPlug</h4>
+<form action="{% url 'tp_device' %}" method="post" class="form">
+{% csrf_token %}
+  MAC Address:<input id="mac_addr" type="text" maxlength="17" name="add"></span>
+  <button type="submit" class="btn btn-primary">
+	Add This Device
+  </button>
+</form>
+
+<hr>
+<h4> Delete device from ThingPlug</h4>
+<form action="{% url 'tp_device' %}" method="post" class="form">
+{% csrf_token %}
+  Gateway ID:<input id="gw_id" type="text" maxlength="16" name="del_gwid"></span><br/>
+  Auth ID:<input id="auth_id" type="text" maxlength="16" name="del_authid"></span><br/>
+  Auth Key:<input id="auth_key" type="text" maxlength="16" name="del_authkey"></span>
+  <button type="submit" class="btn btn-primary">
+	Delete This Device
+  </button>
+</form>
+
+<hr>
+<h4> Check device from ThingPlug</h4>
+<form action="{% url 'tp_device' %}" method="post" class="form">
+{% csrf_token %}
+  Gateway ID:<input id="gw_id" type="text" maxlength="16" name="check"></span>
+  <button type="submit" class="btn btn-primary">
+	Check This Device
+  </button>
+</form>
+
+<hr>
+Result:
+{% if result %}
+<pre>
+{{result}}
+</pre>
+{% endif %}
+
+
+
+{% endblock %}

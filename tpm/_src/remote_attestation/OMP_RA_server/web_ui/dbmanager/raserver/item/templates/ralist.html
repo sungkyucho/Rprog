@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+
+{% block maincontent %}
+
+<h2>{{ _("게이트웨이 이름: ") }}{{ ra_list.gw_name }}</h2>
+{% if ra_list.check_pcr == "FAILED" and ra_answer %}
+<form method="POST" action="{% url 'pcrreset' ra_list.gw_id %}"> 
+{% csrf_token %}
+<input type="submit" class="btn btn-lg btn-info" value="복구"/>
+</form>
+{% endif %}
+{{ _("게이트웨이 이름 ") }}:{{ ra_list.gw_name|linebreaks}} 
+{{ _("게이트웨이 ID ") }}:{{ ra_list.gw_id|linebreaks}}
+{{ _("MAC 주소 ")}}:{{ ra_list.mac_addr|linebreaks}}
+{{ _("원격 검증 요청 시각 ")}}: {{ ra_list.s_time|linebreaks }} 
+{{ _("원격 검증 완료 시각 ")}}: {{ ra_list.f_time|linebreaks }} 
+{{ _("키 검증 결과")}}: {{ ra_list.check_result|linebreaks }} 
+{{ _("세션 검증 결과")}}: {{ ra_list.check_nonce|linebreaks }} 
+{{ _("펌웨어 검증 결과")}}: {{ ra_list.check_pcr|linebreaks }} 
+{% if ra_list.check_pcr == "FAILED" %}
+	{{ _("응답 값")}}: {{ ra_list.recv_pcr|linebreaks }} 
+	{% if ra_answer %}
+	{{ _("정답지")}}: {{ ra_answer.composite|linebreaks }}
+	{% endif %}
+{% endif %}
+{{ _("TPM 검증 항목")}}: {{ ra_list.get_ml_index|linebreaks }} 
+{{ _("원격검증 시도 횟수")}}: {{ ra_list.retry_cnt|linebreaks }} 
+
+'{{ ra_list.gw_name }}'{{ _("에 대한 원격 검증 히스토리")}} 
+{% if ra_history %}
+<table class="table table-bordered">
+<tr><th>순번</th><th>게이트웨이 ID</th><th>게이트웨이 이름</th><th>MAC 주소</th><th>원격 검증 요청 시각</th><th>원격 검증 완료 시각</th><th>키 검증 결과</th><th>세션 검증 결과</th><th>펌웨어 검증 결과</th><th>원격검증 시도 횟수</th></tr>
+	{% for item in ra_history %}
+	<tr>
+		<td>{{ forloop.counter }}</td>
+		<td>{{ item.gw_id }} </td>
+		<td>{{ item.gw_name }}</td>
+		<td>{{ item.mac_addr}}</td>
+		<td>{{ item.s_time }}</td>
+		<td>{{ item.f_time }}</td>
+		<td> {% if item.check_result == "SUCCESS" %}<i class="glyphicon glyphicon-ok"></i>{% elif item.check_result == "FAILED" %}<i class="glyphicon glyphicon-remove"></i>{% else %} {{ item.check_result|default:"-"}}{% endif %} </td>
+		<td> {% if item.check_nonce == "SUCCESS" %}<i class="glyphicon glyphicon-ok"></i>{% elif item.check_nonce == "FAILED" %}<i class="glyphicon glyphicon-remove"></i>{% else %} {{ item.check_nonce|default:"-"}}{% endif %} </td>
+		<td> {% if item.check_pcr == "SUCCESS" %}<i class="glyphicon glyphicon-ok"></i>{% elif item.check_pcr == "FAILED" %}<i class="glyphicon glyphicon-remove"></i>{% else %} {{ item.check_pcr|default:"-"}}{% endif %} </td>
+		<td>{{ item.retry_cnt}}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% else %}
+	<p>No History yet!</p>
+{% endif %}
+
+<a class="btn btn-primary btn-info" href={% url 'raresult' %} role="button">BACK</a>
+{% endblock %}

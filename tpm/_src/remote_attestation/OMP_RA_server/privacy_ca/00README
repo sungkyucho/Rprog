@@ -1,0 +1,6 @@
+Module for Web server (such as Apache/ngnix)
+- CGI/FastCGI/WSGI
+- mod_cgi/mod_fcgig
+
+Other configurations should be properly set.
+- CERT's and keys

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block maincontent %}
+
+<h2> Remote Attestation 정답 데이터</h2>
+ 	<div class="add-pcr"><a href="{% url 'addanswer' %}"><i class="glyphicon glyphicon-plus"></i> 펌웨어 별 PCR 정답 값 등록</a></div>
+
+	{% if raanswer %}
+	<table class="table table-bordered">
+		<tr><th>순번</th><th>버전</th><th>PCR#4 + #5</th><th>PCR#4 + #6</th><th>PCR#5 + #6</th><th>삭제</th></tr>
+		{% for item in raanswer %}
+		<tr>
+			<td>{{ forloop.counter }}</td>
+			<td>{{ item.fw_ver }} </td>
+			<td>{{ item.pcr9 }}</td>
+			<td>{{ item.pcr10 }}</td>
+			<td>{{ item.pcr11 }}</td>
+			<td>
+				<form method="POST" action="{% url 'delete_ans' item.fw_ver %}"> 
+					{% csrf_token %}
+					<div class="inner-addon left-addon"> 
+					<i class="glyphicon glyphicon-trash"></i><input type="submit" class="btn btn-sm btn-danger" value="삭제"/>
+					</div>
+				</form>
+			</td>
+		</tr>
+		{% endfor %}
+	</table>
+	{% else %}
+		<p>데이터가 없습니다!</p>
+	{% endif %}
+{% endblock %}

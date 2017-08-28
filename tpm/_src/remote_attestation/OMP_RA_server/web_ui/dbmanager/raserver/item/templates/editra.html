@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}
+Edit Device 
+{% endblock %}
+{% load bootstrap3 %}
+
+{% block maincontent %}
+{% if result == 'error' %}
+  <script>alert('Invalid Arguments');</script>
+{% endif %}
+<h3>Edit Device</h3>
+
+<form action="{% url 'editra' ra_id %}" method="post" class="form">
+{% csrf_token %}
+  <div class="edit-device">
+  <span>Gateway ID: {{ ra_id }}</span>
+  <span>NONCE: {{ ra_list.nonce}}</span>
+  <span>Response time: {{ ra_list.rsp_time }} </span>
+  <span>RA Result: {{ ra_list.check_result}}</span>
+  {% if ra_list.ra_reason != 0 %}
+  	<span>FAIL Reason: {{ ra_list.check_reason }}</span>
+  {% endif %}
+
+  <span><label for="dev_id"> Device ID: </label>
+  <input id="dev_id" type="text" name="dev_id" value="{{ ra_list.dev_id }}" maxlength="16"></span>
+  <span><label for="ml_index"> PCR Index To RA: </label>
+  {% for v,t in form.ml_index.field.choices %}
+    {% if v == ra_list.ml_index|escape %} 
+  	<br><input type="radio" name="ml_index" value="{{ v }}" checked> {{ t }}
+    {% else %}
+  	<br><input type="radio" name="ml_index" value="{{ v }}"> {{ t }}
+    {% endif %}
+  {% endfor %}
+  </span>
+  
+  <span><label for="fw_ver"> Firmware Version: </label>
+  <input id="fw_ver" type="text" name="fw_ver" maxlength="10" value="{{ ra_list.fw_ver }}" ></span>
+  </div>
+
+  <button type="submit" class="btn btn-primary">
+  Edit Done 
+  </button>
+  <button class="btn btn-primary">
+    <a href="{% url 'raresult'%}">Cancel</a>
+  </button>
+</form>
+{% endblock %}

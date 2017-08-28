@@ -1,0 +1,11 @@
+noinst_LIBRARIES = libsettings.a
+bin_PROGRAMS=Sample_Registration_Encryption
+Sample_Registration_Encryption_SOURCES=Sample_Registration_Encryption.c
+libsettings_a_SOURCES=Setting.c Setting.h
+libsettings_a_SOURCES+=CryptoSuite.h
+libsettings_a_SOURCES+=SecretKey.c Encryption.c
+libsettings_a_SOURCES+=SignVerify.c
+libsettings_a_SOURCES+=Base64.c
+libsettings_a_SOURCES+=TPMFunctions.c
+Sample_Registration_Encryption_LDADD = -lgmmp -L. -lsettings -ljson-c -lcrypto
+Sample_Registration_Encryption_LDFLAGS = -L$(top_srcdir)/GMMP_lib

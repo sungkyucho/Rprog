@@ -1,0 +1,3 @@
+noinst_LTLIBRARIES=libGMMP_Notification.la
+libGMMP_Notification_la_SOURCES = GMMP_Notification.c 
+

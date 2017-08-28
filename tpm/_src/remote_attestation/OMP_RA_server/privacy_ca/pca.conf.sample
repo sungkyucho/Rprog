@@ -1,0 +1,12 @@
+# PATH for this file is given by SetEnv(mod_env)
+# SetEnv PCAHOME path_cgi_daemon
+# Opened for any EKpub
+PUBLIC_MODE=1
+# Cert / Key
+PCA_CERT=cert/pca.crt
+PCA_KEY=key/pca.key
+# Log
+
+# Debug(Output)
+DEBUG_MODE=1
+DGB_OUTDIR=output

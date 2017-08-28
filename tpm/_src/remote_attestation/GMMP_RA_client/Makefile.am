@@ -1,0 +1,4 @@
+AUTOMAKE_OPTIONS = foreign
+ACLOCAL_AMFLAGS = -I m4
+CLEANFILES = 
+SUBDIRS = GMMP_lib ralib src

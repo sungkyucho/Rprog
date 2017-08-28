@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}
+Add a New Firmware 
+{% endblock %}
+{% load bootstrap3 %}
+
+{% block maincontent %}
+<h1>Add a New Firmware</h1>
+
+<form action="{% url 'addanswer' %}" method="post" class="form">
+{% csrf_token %}
+  <div class="edit-device">
+    <span><label for="fw_ver"> Firmware Version: </label>
+    <input id="fw_ver" type="text" maxlength="10" name="fw_ver"></span>
+    <span><label for="pcr4+5"> PCR #4 and #5: </label>
+    <input id="pcr9" type="text" maxlength="40" name="pcr9"></span>
+    <span><label for="pcr4+6"> PCR #4 and #6: </label>
+    <input id="pcr10" type="text" maxlength="40" name="pcr10"></span>
+    <span><label for="pcr5+6"> PCR #5 and #6: </label>
+    <input id="pcr11" type="text" maxlength="40" name="pcr11"></span>
+	<button type="submit" class="btn btn-primary">
+		Add This Firmware 
+	</button>
+	<button class="btn btn-primary">
+	    <a href="{% url 'raanswer' %}">Cancel</a>
+	</button>
+  </div>
+</form>
+{% endblock %}

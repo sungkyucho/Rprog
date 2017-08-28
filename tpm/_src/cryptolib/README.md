@@ -1,0 +1,1 @@
+refer to Sample_Registration_Encryption/README

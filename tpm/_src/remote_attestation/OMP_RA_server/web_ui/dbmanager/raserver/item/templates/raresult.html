@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load tz %}
+
+{% block custom-javascript %}
+<script type="text/javascript"> 
+var $rows = $('.table-ralist .table-content');
+$('#search').keyup(function() {
+	var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+
+	$rows.show().filter(function() {
+		var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+		return !~text.indexOf(val);
+	}).hide();
+});
+$(".btn-req").click(function(){
+	var clicked = $(this);	
+	clicked.prop("disabled", true);
+	clicked.after('<div class="tmp-msg">Wait a minute...</div>');
+	setTimeout(function() {
+		clicked.prop("disabled", false);      
+		clicked.next().remove();
+	}, 30000);
+	$.ajax({ 
+		url: '/ajax_req/', 
+		data: this.id,
+		success: function(data){ console.log(data);	},
+		error: function(e){console.log(e);}
+	});
+});
+/*
+$.ajax({
+	url: '/ajax_status/',
+	dataType: 'json',
+	data:$( 
+	success: function (data) {
+		redraw_table(data);
+	},
+    error: function(e){console.log(e);}
+});
+
+function redraw_table(ralist){
+	$('.table-content').remove();
+	for(var i=0; i<ralist.length; i++){
+	  var devinfo = ralist[i].fields;
+	  if( devinfo.ra_result == '1111')
+		var result = "<i class=\"glyphicon glyphicon-ok\"></i>";
+	  else 
+		var result = "<i class=\"glyphicon glyphicon-remove\"></i>";
+		
+	  var time = "None";
+	  if( devinfo.rsp_time != null)
+		  time = devinfo.rsp_time.slice(0, -1);
+	  var delete_button = "<div class=\"inner-addon left-addon\"> <i class=\"glyphicon glyphicon-trash\"></i> <input type=\"submit\" class=\"btn btn-sm btn-danger\" value=\"삭제\"/> </div>" 
+
+	 // console.log("time:" +  devinfo.rsp_time + "" );
+	  var url = "delete/" + ralist[i].pk + "/";
+	  $('.table-ralist').append("<tr class='table-content'><td>" 
+		  + (i+1)  + "</td>" + 
+		  "<td><a href=\"" + ralist[i].pk + "/\">" + ralist[i].pk + "</a></td>" + 
+		  "<td>" + devinfo.dev_id + "</td>" + 
+		  "<td>" + time + "</td>" + 
+		  "<td>" + result + "</td>" + 
+		  "{% if user.is_authenticated %}" +
+		  "<td> <form method=\"POST\" action=\"" + url + "\">" + 
+		  "{% csrf_token %}" + delete_button + "</form> </td>" +
+		  "{% endif %}" + 
+		  "</tr>")
+	}
+}
+*/
+</script>
+{% endblock %}
+
+{% block maincontent %}
+<h2> Remote Attestation 장치 목록</h2>
+ 	<div class="add-device"><a href="{% url 'addra' %}">
+		<i class="glyphicon glyphicon-plus"></i> 새 장치 등록</a>
+	</div>
+	<div class="searchbox"> 
+		<input type="text" id="search" placeholder="검색할 게이트웨이 ID">
+	</div>
+
+	{% if raresult %}
+	<table class="table table-bordered table-ralist">
+		<tr>
+			<th>순번</th><th>게이트웨이 ID</th><th>장치 ID</th>
+			<th>RA 응답 시각</th><th>RA 결과</th>
+			<!-- <th>One-time RA 요청</th> -->
+		{% if user.is_authenticated %} 
+			<th>Delete</th>
+		{% endif %}
+		</tr>
+
+		{% for item in raresult %}
+		<tr class="table-content">
+			<td>{{ forloop.counter }}</td>
+			<td>
+				<a href="{{ item.gw_id }}/"> {{ item.gw_id }}</a>
+			</td>
+			<td>{{ item.dev_id}}</td>
+			<td> {% if item.rsp_time %} {{ item.rsp_time|utc|date:"c"|slice:":19"}} {% else %}없음{% endif %}</td>
+			<td> {% if item.check_result == "SUCCESS" %}<i class="glyphicon glyphicon-ok"></i>
+				{% elif item.check_result == "FAILED" %}<i class="glyphicon glyphicon-remove"></i>
+				{% else %} {{ item.check_result|default:"-"}}{% endif %} 
+			</td>
+			<!--
+			<td>
+				<input type="submit" class="btn btn-sm btn-info btn-req" id="{{ item.gw_id }}" value="One-time RA"/>
+			</td>
+			-->
+			{% if user.is_authenticated %} 
+			<td>
+				<form method="POST" action="{% url 'delete_item' item.gw_id %}"> 
+					{% csrf_token %}
+					<div class="inner-addon left-addon"> 
+					<i class="glyphicon glyphicon-trash"></i>
+					<input type="submit" class="btn btn-sm btn-danger" value="삭제"/>
+					</div>
+				</form>
+			</td>
+			{% endif %}
+		</tr>
+		{% endfor %}
+	</table>
+	{% else %}
+		<p>데이터가 없습니다!</p>
+	{% endif %}
+{% endblock %}

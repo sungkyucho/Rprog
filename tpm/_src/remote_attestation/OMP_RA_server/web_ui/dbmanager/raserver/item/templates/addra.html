@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}
+Add a New Device 
+{% endblock %}
+{% load bootstrap3 %}
+
+{% block maincontent %}
+<h1>Add a New Device</h1>
+{% if result == 'error' %}
+  <script>alert('Invalid Arguments');</script>
+{% endif %}
+<form action="{% url 'addra' %}" method="post" class="form">
+{% csrf_token %}
+  <div class="edit-device">
+  <span><label for="gw_id"> Gateway ID : </label>
+  <input id="gw_id" type="text" maxlength="16" name="gw_id"></span>
+  <span><label for="dev_id"> Device ID: </label>
+  <input id="dev_id" type="text" maxlength="16" name="dev_id"></span>
+  <span><label for="ml_index"> PCR Index To RA: </label>
+	{% for v,t in form.ml_index.field.choices %}
+	    <br><input type="radio" name="ml_index" value="{{ v }}"> {{ t }}
+	{% endfor %}
+  </span>
+  <span><label for="fw_ver"> Firmware Version: </label>
+  <input id="fw_ver" type="text" name="fw_ver" maxlength="10" value="1.0" ></span>
+
+	<button type="submit" class="btn btn-primary">
+		Add This Device	
+	</button>
+	<button class="btn btn-primary">
+	    <a href="{% url 'raresult' %}">Cancel</a>
+	</button>
+  </div>
+</form>
+
+{% endblock %}

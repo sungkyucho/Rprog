@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% block maincontent %}
+
+		{% if raresult %}
+		<table class="table">
+			<tbody>
+			{% for item in raresult %}
+
+			{% if forloop.counter0|divisibleby:2 %} 
+			<tr>
+			{% endif %}
+
+				{% if item.retry_cnt > 10 %}
+				<td class="blinkBGOrange">
+				{% elif item.check_pcr == "FAILED" %}
+				<td class="blinkBGRed">
+				{% else %}
+				<td>
+				{% endif %}
+
+				<a href="{{ item.gw_id}}/">
+				<img src="{% static 'images/s_sp_rpi3.png' %}" alt="{{ item.gw_id }}" class="rpi3-img">
+				<div class="item_name">{{ item.gw_name}}</div></a>
+				</td>
+
+			{% if forloop.counter|divisibleby:2 %} 
+			</tr>
+			{% endif %}
+
+			{% endfor %}
+
+			<!-- dummy -->
+			<td>
+			<img src="{% static 'images/s_sp_rpi3_gray.png' %}" class="rpi3-img">
+			{{ "" }}
+			</td>
+			</tr>
+			<tr>
+			<td>
+			<img src="{% static 'images/s_sp_rpi3_gray.png' %}" class="rpi3-img">
+			{{ "" }}
+			</td>
+			<td>
+			<img src="{% static 'images/s_sp_rpi3_gray.png' %}" class="rpi3-img">
+			{{ "" }}
+			</td>
+			</tr>
+			<!-- dummy -->
+			</tbody>
+		</table>
+		{% else %}
+			<p>You haven't yet!</p>
+		{% endif %}
+{% endblock %}
+
+{% block logo %}
+{% endblock %}

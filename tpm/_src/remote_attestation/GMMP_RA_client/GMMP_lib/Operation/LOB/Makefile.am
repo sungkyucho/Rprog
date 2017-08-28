@@ -1,0 +1,2 @@
+noinst_LTLIBRARIES=libGMMP_LOB.la
+libGMMP_LOB_la_SOURCES = GMMP_LOB.c 

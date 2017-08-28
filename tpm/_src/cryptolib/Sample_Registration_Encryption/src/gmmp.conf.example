@@ -1,0 +1,9 @@
+{
+	"ServerIP":"61.250.21.211",
+	"ServerPort":31002,
+	"DomainCode":"ThingPlug",
+	"GWAuthID":"002655EDE8F1",
+	"GWMFID":"mycorporation",
+	"DeviceMFID":"",
+	"ErrorLevel":2,
+}

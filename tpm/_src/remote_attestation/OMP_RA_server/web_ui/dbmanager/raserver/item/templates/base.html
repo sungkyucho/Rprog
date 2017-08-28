@@ -1,0 +1,67 @@
+{% load staticfiles %}
+
+<html>
+	<head>
+		<title> {% block title %}{{ _("SecurityPlatform") }}{% endblock %} </title>
+	{% load bootstrap3 %}
+	{% block head-css %}
+	<link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+	<link href="{% static 'ralist/css/style.css' %}" rel="stylesheet">
+	{% endblock %}
+	<link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
+	</head>
+	<body>
+	  <div class="navbar-top"><img src="{% static 'images/bar_top.png' %}" class="bar-top"> </div>
+	  <div class="navbar navbar-default navbar-fixed-top navbar-box" role="navigation">
+		  <div class="container ">
+			<div class="navbar-header">
+			  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			  </button>
+				{% block logo %} {% endblock %}
+			  <a class="navbar-brand" href="/ralist/">
+				<img src="{% static 'images/sp_logo.png' %}" alt="SecurityPlatform" class="logo-img">
+			   </a>
+			</div>
+			<div class="collapse navbar-collapse">
+				<a href={% url 'raresult' %}><img src="{% static 'images/title.png' %}" class="title-top"></a>
+			  <ul class="nav navbar-nav">
+				<li><a class="navbar-menu" href= {% url 'raresult' %} >RA 장치 목록</a></li> 
+				<li><a class="navbar-menu" href= {% url 'rahistory' %} >RA 진행 상황</a></li> 
+{% if user.is_authenticated %} 
+				<li><a class="navbar-menu" href= {% url 'raanswer' %} >PCR 정답지 등록</a></li> 
+{% endif %}
+				<li><a class="navbar-menu" href= {% url 'register' %} >ThingPlug에 등록</a></li> 
+			  </ul>
+			</div><!-- nav-collapse -->
+		  </div> <!-- container -->
+		</div> <!-- navbar -->
+
+		<div class="data-container">
+			{% block maincontent %}
+			{% endblock %}
+		</div><!-- data-ontainer -->
+
+	<footer>
+		<div class="footer static-footer">
+		<div class="container">
+		<!-- <div class= "navbar navbar-inverse navbar-static-bottom" role="navigation"> -->
+			<div class="copyright">
+			Copyright &copy; 2016 Security Platform Inc.
+			</div>
+		</div>	
+		</div>	
+	</footer>
+
+	</body>
+	{% block head-javascript %}
+		<script src="{% static 'js/jquery/jquery.min.js' %}"></script>
+		<script src="{% static 'ralist/js/custom.js' %}"></script>
+		<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+	{% endblock %}
+	{% block custom-javascript %}
+	{% endblock %}
+</html>

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load tz %}
+
+{% block maincontent %}
+<h2> Remote Attestation 진행 상황</h2>
+	<div class="searchbox"> 
+	<form method="POST" action="{% url 'rahistory' %}"> 
+		{% csrf_token %}
+		<input type="text" id="search" name="gw_id" placeholder="검색할 게이트웨이 ID"> <i class="glyphicon glyphicon-search"></i>
+	</form>
+	</div>
+		{% if raresult %}
+		<table class="table table-bordered table-history">
+			<tr><th>순번</th><th>게이트웨이 ID</th><th>장치 ID</th><th>RA 응답 시각</th><th>RA 실패 이유</th><th>RA 검증</th><th>NONCE </th><th>PCR 해시 값</th></tr>
+			{% for item in raresult %}
+			<tr class="table-content">
+				<td>{{ forloop.counter }}</td>
+				<td>{{ item.gw_id }} </td>
+				<td>{{ item.dev_id }}</td>
+				<td>{{ item.rsp_time|utc }}</td>
+				<td>{{ item.check_reason}}</td>
+				<td> {% if item.check_verify == "SUCCESS" %}<i class="glyphicon glyphicon-ok"></i>{% elif item.check_verify == "FAILED" %}<i class="glyphicon glyphicon-remove"></i>{% else %} {{ item.check_verify|default:"-"}}{% endif %} </td>
+				<td> {% if item.check_nonce == "SUCCESS" %}<i class="glyphicon glyphicon-ok"></i>{% elif item.check_nonce == "FAILED" %}<i class="glyphicon glyphicon-remove"></i>{% else %} {{ item.check_nonce|default:"-"}}{% endif %} </td>
+				<td> {% if item.check_pcr == "SUCCESS" %}<i class="glyphicon glyphicon-ok"></i>{% elif item.check_pcr == "FAILED" %}<i class="glyphicon glyphicon-remove"></i>{% else %} {{ item.check_pcr|default:"-"}}{% endif %} </td>
+			</tr>
+			{% endfor %}
+		</table>
+		{% else %}
+			<p>데이터가 없습니다!</p>
+		{% endif %}
+{% endblock %}
